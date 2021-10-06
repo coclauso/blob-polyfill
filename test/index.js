@@ -51,6 +51,16 @@ describe("blob-polyfill", function () {
 				is.assert.arrayBuffer(value);
 			});
 		});
+
+		it("Blob can be instantiated with ArrayBuffer, data can be recovered", function () {
+			var testString = "Testing...";
+			var arrayBuffer = stringToArrayBuffer(testString);
+			var blob = new Blob([arrayBuffer]);
+			return blob.arrayBuffer().then(function (value) {
+				var testStringRecovered = arrayBufferToString(value);
+				assert.strictEqual(testString, testStringRecovered);
+			});
+		});
 	});
 
 	describe("File", function () {
@@ -106,3 +116,18 @@ describe("blob-polyfill", function () {
 		});
 	});
 });
+
+
+function stringToArrayBuffer(string) {
+	const buf = new ArrayBuffer(string.length * 2); // 2 bytes for each char
+	const bufView = new Uint16Array(buf);
+	for (let i = 0, strLen = string.length; i < strLen; i++) {
+		bufView[i] = string.charCodeAt(i);
+	}
+	return buf;
+}
+
+function arrayBufferToString(buffer) {
+	const array = new Uint16Array(buffer);
+	return String.fromCharCode.apply(null, array);
+}
