@@ -256,7 +256,7 @@
 
 		function FakeBlobBuilder () {
 			function isDataView (obj) {
-				return obj && Object.prototype.isPrototypeOf(DataView, obj);
+				return obj && Object.prototype.isPrototypeOf.call(DataView.prototype, obj);
 			}
 			function bufferClone (buf) {
 				var view = new Array(buf.byteLength);
@@ -352,10 +352,10 @@
 						chunks[i] = chunk._buffer;
 					} else if (typeof chunk === "string") {
 						chunks[i] = textEncode(chunk);
-					} else if (arrayBufferSupported && (Object.prototype.isPrototypeOf(ArrayBuffer, chunk) || isArrayBufferView(chunk))) {
+					} else if (arrayBufferSupported && (Object.prototype.isPrototypeOf.call(ArrayBuffer.prototype, chunk) || isArrayBufferView(chunk))) {
 						chunks[i] = bufferClone(chunk);
 					} else if (arrayBufferSupported && isDataView(chunk)) {
-						chunks[i] = bufferClone(chunk.buffer === undefined ? chunk : chunk.buffer);
+						chunks[i] = bufferClone(chunk.buffer);
 					} else {
 						chunks[i] = textEncode(String(chunk));
 					}
