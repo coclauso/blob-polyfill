@@ -352,7 +352,11 @@
 						chunks[i] = chunk._buffer;
 					} else if (typeof chunk === "string") {
 						chunks[i] = textEncode(chunk);
-					} else if (arrayBufferSupported && (Object.prototype.isPrototypeOf.call(ArrayBuffer.prototype, chunk) || isArrayBufferView(chunk))) {
+					} else if (
+						arrayBufferSupported && (
+							Object.prototype.isPrototypeOf.call(ArrayBuffer.prototype, chunk)
+							|| isArrayBufferView(chunk)
+							|| toString.call(chunk) === "[object ArrayBuffer]")) {
 						chunks[i] = bufferClone(chunk);
 					} else if (arrayBufferSupported && isDataView(chunk)) {
 						chunks[i] = bufferClone(chunk.buffer);
